@@ -28,6 +28,7 @@ class GameScene: SKScene {
     var lives = 3
     var coins = 0
     var levels = 1
+    var finalScore = 0
     var gameOver = false
     let livesLabel = SKLabelNode(fontNamed: "Chalkduster")
     let labelNode  = SKLabelNode(fontNamed: "Chalkduster")
@@ -364,9 +365,41 @@ class GameScene: SKScene {
         checkCollisions()
         
         
+//        if lives <= 0 && !gameOver {
+//            gameOver = true
+//            print("You lose!")
+//        }
         if lives <= 0 && !gameOver {
             gameOver = true
             print("You lose!")
+            print("Your Final Score is " + String(finalScore))
+            
+            
+            //if the user loses the game he will se the you Lose screen
+            
+            
+            let gameOver = GameOverScreen(size: size, won: false)
+            
+            gameOver.scaleMode = scaleMode
+            
+            let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+            
+            view?.presentScene(gameOver, transition: reveal)
+            
+        } else if finalScore>=3 {
+            print("You win!")
+            print("Your Final Score is " + String(finalScore))
+            
+            
+            //if the user wons the game he will se the you win screen
+            
+            
+            let gameOver = GameOverScreen(size: size, won: true)
+            gameOver.scaleMode = scaleMode
+            
+            let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+            // 3
+            view?.presentScene(gameOver, transition: reveal)
         }
             
             //        print("\(dt*1000) milliseconds since last update")
