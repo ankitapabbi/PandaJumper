@@ -27,10 +27,12 @@ class GameScene: SKScene {
      var invincible = false
     var lives = 3
     var coins = 0
+    var levels = 1
     var gameOver = false
     let livesLabel = SKLabelNode(fontNamed: "Chalkduster")
     let labelNode  = SKLabelNode(fontNamed: "Chalkduster")
     let coinLabel  = SKLabelNode(fontNamed: "Chalkduster")
+    let levelLabel  = SKLabelNode(fontNamed: "Chalkduster")
 
     
     
@@ -69,7 +71,7 @@ class GameScene: SKScene {
         
                 panda.position = CGPoint(x: 200, y: 210)
         
-                coin.position = CGPoint(x: 800, y: 610)
+                coin.position = CGPoint(x: 950, y: 610)
                 addChild(panda)
                spawnEnemy()
                 addChild(coin)
@@ -78,6 +80,11 @@ class GameScene: SKScene {
         run(SKAction.repeatForever(
             SKAction.sequence([SKAction.run() { [weak self] in
                 self?.spawnEnemy()
+                },
+                               SKAction.wait(forDuration: 3.0)])))
+        run(SKAction.repeatForever(
+            SKAction.sequence([SKAction.run() { [weak self] in
+                self?.spawnExit()
                 },
                                SKAction.wait(forDuration: 3.0)])))
         
@@ -112,14 +119,21 @@ class GameScene: SKScene {
         coinLabel.position = CGPoint(x:300,
                                      y:1000)
         addChild(coinLabel)
-       // go()
+        levelLabel.text = "Level: \(levels)"
+        levelLabel.fontColor = SKColor.white
+        levelLabel.fontSize = 100
+        levelLabel.zPosition = 1300
+        levelLabel.position = CGPoint(x:1800,
+                                     y:1200)
+        addChild(levelLabel)
+      // go()
         
     }
     func go(){
         
         
-        let moveRight = SKAction.move(to: CGPoint(x: playableRect.width, y:  400), duration: 5)
-        let moveLeft = SKAction.move(to: CGPoint(x: 0, y:  400), duration: 5)
+        let moveRight = SKAction.move(to: CGPoint(x: playableRect.width, y:  150), duration: 5)
+        let moveLeft = moveRight.reversed()
         panda.run(SKAction.repeatForever(SKAction.sequence([moveRight, moveLeft])))
         
     }
@@ -183,6 +197,7 @@ class GameScene: SKScene {
         
         let actionJump : SKAction
         actionJump = SKAction.moveBy(x: 0, y: 350, duration: 0.7)
+        
         let jumpSequence = SKAction.sequence([actionJump, actionJump.reversed()])
         panda.run(jumpSequence)
         
@@ -207,6 +222,9 @@ class GameScene: SKScene {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
     func boundsCheckPanda() {
+        
+        
+      
         
         let bottomLeft = CGPoint(x: 0, y: playableRect.minY)
         let topRight = CGPoint(x: size.width, y: playableRect.maxY)
@@ -368,6 +386,24 @@ class GameScene: SKScene {
             boundsCheckPanda()
             
         
+    }
+    func spawnExit() {
+        // 1
+        let exit = SKSpriteNode(imageNamed: "exit")
+        exit.size = CGSize(width: 150, height: 150)
+        exit.name = "exit"
+        exit.position = CGPoint(
+            x: playableRect.maxX-100,
+            y: playableRect.minY + 100)
+        exit.zPosition = 50
+        exit.setScale(0)
+        addChild(exit)
+        // 2
+        let appear = SKAction.scale(to: 1.0, duration: 0.5)
+        
+        let actions = [appear]
+    
+        exit.run(SKAction.sequence(actions))
     }
     
     
